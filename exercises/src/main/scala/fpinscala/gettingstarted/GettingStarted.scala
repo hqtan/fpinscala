@@ -165,12 +165,6 @@ object PolymorphicFunctions {
   // Exercise 4: Implement `uncurry`
   def uncurry[A,B,C](f: A => B => C): (A, B) => C =
     (a: A, b: B) => f(a)(b)
-    //(a: A, b: B) => ((a: A) => f(a))
-    //(a: A, b: B) => (b: B) => f(a)
-    //(a: A, b: B) => (a: A) => f(a)
-    //(a: A, b: B) => (a: A) => f(b)
-    //(a: A, b: B) => (b: B) => f(b)
-    //(a: A, b: B) => ((a: A) => (b: B) => f(a))
 
   /*
   NB: There is a method on the `Function` object in the standard library,
@@ -185,5 +179,5 @@ object PolymorphicFunctions {
   // Exercise 5: Implement `compose`
 
   def compose[A,B,C](f: B => C, g: A => B): A => C =
-    ???
+    (a: A) => f(g(a))
 }
