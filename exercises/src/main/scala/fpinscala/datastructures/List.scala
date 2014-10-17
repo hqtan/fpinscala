@@ -72,6 +72,10 @@ object List { // `List` companion object. Contains functions for creating and wo
     }
 
   //dropWhile2 errors if input is an empty list!
+  /* But specifying the input type will work:
+   * dropWhile2[Int](List())(x => x < 4)
+   * dropWhile2[Int](List())((x:Int) => x < 4)
+   */
   def dropWhile2[A](as: List[A])(f: A => Boolean): List[A] = as match {
     case Cons(h,t) if f(h) => dropWhile2(t)(f)
     case _ => as 
