@@ -46,25 +46,28 @@ object List { // `List` companion object. Contains functions for creating and wo
   def product2(ns: List[Double]) = 
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
-
+  //ex3.2
   def tail[A](l: List[A]): List[A] = 
     l match {
       case Nil => Nil
       case Cons(x, xs) => xs
     }
 
+  //ex3.3
   def setHead[A](l: List[A], h: A): List[A] = 
     l match {
       case Nil => Nil
       case Cons(x, xs) => Cons(h, xs)
     }
 
+  //ex3.4
   def drop[A](l: List[A], n: Int): List[A] = 
     l match {
       case Nil => Nil
       case Cons(x, xs) => if (n == 0) Cons(x, xs) else drop(xs, n-1)
     }
 
+  //ex3.5
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] = 
     l match {
       case Nil => Nil
@@ -81,6 +84,7 @@ object List { // `List` companion object. Contains functions for creating and wo
     case _ => as 
   }
 
+  //ex3.6
   def init[A](l: List[A]): List[A] = 
     l match {
       case Nil => Nil
@@ -88,9 +92,56 @@ object List { // `List` companion object. Contains functions for creating and wo
       case Cons(x, xs) => Cons(x, init(xs))
     }
 
-  def length[A](l: List[A]): Int = sys.error("todo")
+  //ex3.7
+  def product3(ns: List[Double]) = 
+    ns match {
+      case Cons(0.0,_) => 0.0
+      case _ => foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
+    }
 
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = sys.error("todo")
+  //ex3.8
+  //foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_))
+  /*
+   * output is the same list back. foldRight() replaces the constructors of the list,
+   * Nil and Cons, with z and f. But since z is Nil, and f is Cons, then foldRight
+   * will return the same list back
+   */
+
+  //ex3.9
+  def length[A](l: List[A]): Int = 
+    foldRight(l, 0)((x,y) => 1 + y)
+
+  //ex3.10
+  @annotation.tailrec
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = 
+    l match {
+      case Nil => z
+      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
+    }
+
+  //ex3.11
+  def sumFl(ns: List[Int]) = 
+    foldLeft(ns, 0)((x,y) => x + y)
+
+  def productFl(ns: List[Double]) = 
+    foldLeft(ns, 1.0)(_ * _)
+
+  def lengthFl[A](l: List[A]): Int = 
+    foldLeft(l, 0)((x,y) => x + 1)
+
+  //ex3.12
+  //foldLeft(List(1,2,3), Nil)(append(Nil,1))
+  //foldLeft(List(2,3), List(1))(append(2,1))
+  def reverse[A](l: List[A]): List[A] = ???
+    //foldLeft(l, Nil:List[A])(append(l.tail,l.head))
+
+  /*
+  def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = // Utility functions
+    as match {
+      case Nil => z
+      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    }
+  */
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
