@@ -130,11 +130,30 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldLeft(l, 0)((x,y) => x + 1)
 
   //ex3.12
-  //foldLeft(List(1,2,3), Nil)(append(Nil,1))
-  //foldLeft(List(2,3), List(1))(append(2,1))
-  def reverse[A](l: List[A]): List[A] = ???
-    //foldLeft(l, Nil:List[A])(append(l.tail,l.head))
+  //reverse() - not using foldLeft()
+  def reverse[A](l: List[A]): List[A] = {
+    @annotation.tailrec
+    def go[A](l: List[A], acc: List[A]): List[A] =
+      l match {
+        case Nil => acc
+        case Cons(x,xs) => go(xs, append(List(x),acc))
+      }
+    go(l, List())
+  }
 
+  //a foldLeft() implementation of reverse()
+  def reverse2[A](l: List[A]): List[A] = 
+    foldLeft(l, Nil:List[A])((x:List[A], y:A) => append(List(y), x))
+
+  //ex3.13
+  def foldLeft2[A,B](l: List[A], z: B)(f: (B, A) => B): B = ???
+    //foldRight(l, ?)((x,y) => ?)
+    /*
+    l match {
+      case Nil => z
+      case Cons(x,xs) => foldRight(xs, f(z,x))(f)
+    }
+    */
   /*
   def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = // Utility functions
     as match {
