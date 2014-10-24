@@ -119,14 +119,6 @@ object List { // `List` companion object. Contains functions for creating and wo
       case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
     }
 
-  //ex3.14
-  def append2[A](a1: List[A], a2: List[A]): List[A] = {
-    a1 match {
-      case Nil => a2
-      case Cons(x, xs) => Cons(x, foldRight(xs, a2)(Cons(_,_)))
-    }
-  }
-
   //ex3.11
   def sumFl(ns: List[Int]) = 
     foldLeft(ns, 0)((x,y) => x + y)
@@ -170,6 +162,20 @@ object List { // `List` companion object. Contains functions for creating and wo
     }
   */
 
+  //ex3.14
+  //foldRight implementation of append()
+  def appendR[A](a1: List[A], a2: List[A]): List[A] = 
+    a1 match {
+      case Nil => a2
+      case Cons(x, xs) => Cons(x, foldRight(xs, a2)(Cons(_,_)))
+    }
+  
+  //foldLeft implementation of append()
+  def appendL[A](a1: List[A], a2: List[A]): List[A] = 
+    a1 match {
+      case Nil => a2
+      case Cons(x,xs) => Cons(foldLeft(xs,x)((x,xs) => x), appendL(xs, a2))
+    }
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
