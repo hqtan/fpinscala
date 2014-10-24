@@ -145,6 +145,10 @@ object List { // `List` companion object. Contains functions for creating and wo
   def reverse2[A](l: List[A]): List[A] = 
     foldLeft(l, Nil:List[A])((x:List[A], y:A) => append(List(y), x))
 
+  //a Better foldLeft() implementation of reverse()!
+  def reverseL[A](l: List[A]): List[A] = 
+    foldLeft(l, Nil:List[A])((z:List[A], x:A) => Cons(x,z))
+
   //ex3.13
   def foldLeft2[A,B](l: List[A], z: B)(f: (B, A) => B): B = ???
     //foldRight(l, ?)((x,y) => ?)
@@ -170,12 +174,22 @@ object List { // `List` companion object. Contains functions for creating and wo
       case Cons(x, xs) => Cons(x, foldRight(xs, a2)(Cons(_,_)))
     }
   
+  //A better foldRight implementation of append(), after discovering that
+  //arg 2 of foldRight CAN ALSO be a List type! Same applies to foldLeft!
+  def appendR2[A](a1: List[A], a2: List[A]): List[A] = 
+    foldRight(a1, a2)(Cons(_,_))
+
   //foldLeft implementation of append()
   def appendL[A](a1: List[A], a2: List[A]): List[A] = 
     a1 match {
       case Nil => a2
       case Cons(x,xs) => Cons(foldLeft(xs,x)((x,xs) => x), appendL(xs, a2))
     }
+
+  //another better (I think) foldLeft implementation of append(), which is
+  //similar to how reverseL() is implemented
+  def appendL2[A](a1: List[A], a2: List[A]): List[A] = 
+    foldLeft(reverseL(a1), a2)((z:List[A], x:A) => Cons(x,z))
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
