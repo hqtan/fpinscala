@@ -191,5 +191,44 @@ object List { // `List` companion object. Contains functions for creating and wo
   def appendL2[A](a1: List[A], a2: List[A]): List[A] = 
     foldLeft(reverseL(a1), a2)((z:List[A], x:A) => Cons(x,z))
 
+  //ex3.15
+  def concat[A](ll:List[List[A]]): List[A] = 
+    ll match {
+      case Nil => Nil
+      case Cons(x,xs) => append(x, concat(xs))
+    }
+
+  //foldLeft implementation of concat()
+  def concat2[A](ll:List[List[A]]): List[A] = 
+    ll match {
+      case Nil => Nil
+      case Cons(x,xs) => foldLeft(xs, x)(append(_,_))
+    }
+
+  //foldRight implementation of concat()
+  def concat3[A](ll:List[List[A]]): List[A] = 
+    ll match {
+      case Nil => Nil
+      case Cons(x,xs) => foldRight(xs, x)((a,b) => append(b,a))
+    }
+
+  //authors' implementation of concat()
+  def concat4[A](ll:List[List[A]]): List[A] = 
+    foldRight(ll, Nil:List[A])(append)
+
+  //A better implementation of concat() using foldLeft(), after seeing author's
+  //solution!
+  def concat5[A](ll:List[List[A]]): List[A] = 
+    foldLeft(ll, Nil:List[A])(append)
+
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
+
+/*
+  @annotation.tailrec
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = 
+    l match {
+      case Nil => z
+      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
+    }
+ */
