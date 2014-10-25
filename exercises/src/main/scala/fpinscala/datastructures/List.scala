@@ -262,13 +262,29 @@ object List { // `List` companion object. Contains functions for creating and wo
     flatMap(l)(x => if (f(x)) List(x) else List())
 
   //ex3.22
-  def addLists[A](l1: List[A], l2: List[A]): List[A] = ???
-  /*
-    l2 match {
-      case Nil => Nil
-      case Cons(x,xs) => foldRight(l1, xs)((x,z) => Cons())
+  def addLists(l1: List[Int], l2: List[Int]): List[Int] = {
+    def addx(l: List[Int], a:Int): Int = 
+      l match {
+        case Nil => a
+        case Cons(x,xs) => x+a
+      }
+
+    l1 match {
+      case Nil => l2
+      case Cons(x,xs) => Cons(addx(l2,x), addLists(xs, tail(l2)))
     }
-   */ 
+  }
+  
+  //ex3.23
+  def zipWith[A](l1: List[A], l2: List[A])(f: (A,A) => A): List[A] = 
+    l1 match {
+      case Nil => l2
+      case Cons(x, xs) => 
+        l2 match { 
+          case Nil => l1
+          case Cons(y, ys) => Cons(f(x,y), zipWith(xs, ys)(f))
+        }
+    }
 }
 
 /*
