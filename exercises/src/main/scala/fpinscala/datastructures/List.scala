@@ -221,7 +221,54 @@ object List { // `List` companion object. Contains functions for creating and wo
   def concat5[A](ll:List[List[A]]): List[A] = 
     foldLeft(ll, Nil:List[A])(append)
 
-  def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
+  //ex3.16
+  def addn(l:List[Int], n:Int): List[Int] = 
+    foldLeft(reverse(l), Nil:List[Int])((z:List[Int],x:Int) => Cons(x+n, z))
+    
+  def addn2(l:List[Int], n:Int): List[Int] = {
+    @annotation.tailrec
+    def go(l:List[Int], m:List[Int]): List[Int] =
+      l match {
+        case Nil => m
+        case Cons(x,xs) => go(xs, Cons(x+n, m))
+      }
+    go(reverse(l), List())
+  }
+
+  def addn3(l:List[Int], n:Int): List[Int] = 
+    foldRight(l, Nil:List[Int])((x: Int, z:List[Int]) => Cons(x+n, z))
+
+  //ex3.17
+  def dToStr(l:List[Double]): List[String] =
+    foldLeft(reverse(l), Nil:List[String])((z:List[String], x:Double) => Cons(x.toString, z))
+
+  //ex3.18
+  def map[A,B](l: List[A])(f: A => B): List[B] = 
+    foldLeft(reverse(l), Nil:List[B])((z,x) => Cons(f(x), z))
+
+  //ex3.19
+  def filter[A](l: List[A])(f: A => Boolean): List[A] = 
+    foldLeft(reverse(l), Nil:List[A])((z,x) => if (f(x)) Cons(x, z) else z)
+
+  //ex3.20
+  def flatMap[A,B](l: List[A])(f: A => List[B]): List[B] =
+    foldLeft(reverse(l), Nil:List[B])((z,x) => append(f(x), z))
+
+  def flatMapR[A,B](l: List[A])(f: A => List[B]): List[B] =
+    foldRight(l, Nil:List[B])((x,z) => append(f(x), z))
+
+  //ex3.21
+  def filter2[A](l: List[A])(f: A => Boolean): List[A] = 
+    flatMap(l)(x => if (f(x)) List(x) else List())
+
+  //ex3.22
+  def addLists[A](l1: List[A], l2: List[A]): List[A] = ???
+  /*
+    l2 match {
+      case Nil => Nil
+      case Cons(x,xs) => foldRight(l1, xs)((x,z) => Cons())
+    }
+   */ 
 }
 
 /*
