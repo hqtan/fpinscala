@@ -285,6 +285,34 @@ object List { // `List` companion object. Contains functions for creating and wo
           case Cons(y, ys) => Cons(f(x,y), zipWith(xs, ys)(f))
         }
     }
+
+  //ex3.24
+  //take() is a 'helper' function for hasSubsequence to take the
+  //first n elements of List
+  def take[A](l: List[A], n:Int): List[A] = {
+    @annotation.tailrec
+    def go[A](l:List[A], n:Int, acc:List[A]): List[A] =
+    (l, n) match {
+      case (Nil,_) => reverse(acc)
+      case (_,0) => reverse(acc)
+      case (Cons(x,xs),_) => go(xs, n-1, Cons(x, acc))
+    }
+    go(l, n, Nil:List[A])
+  }
+
+  //recurse through each element of List; compare first n elements of
+  //List with sub
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    val sublen = length(sub)
+    @annotation.tailrec
+    def go[A](sup: List[A], z:Boolean): Boolean =
+    (sup,z) match {
+      case (Nil,_) => z
+      case (_,true) => true
+      case (Cons(x,xs),_) => go(xs, (take(sup, sublen) == sub))
+    }
+    go(sup, false)
+  }
 }
 
 /*
