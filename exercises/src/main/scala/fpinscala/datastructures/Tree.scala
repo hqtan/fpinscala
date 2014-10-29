@@ -3,6 +3,7 @@ package fpinscala.datastructures
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
 case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+case object EmptyLeaf extends Tree[Nothing]
 
 
 object Tree {
@@ -15,6 +16,7 @@ object Tree {
       case Branch(l:Branch[A], r:Leaf[A]) => 2 + size2(l)
       case Branch(l:Leaf[A], r:Branch[A]) => 2 + size2(r)
       case Leaf(_) => 1
+      case EmptyLeaf => 1
     }
 
   //author's implementation is much simpler; simpler is nicer IMHO
@@ -22,6 +24,7 @@ object Tree {
     b match {
       case Leaf(_) => 1
       case Branch(l, r) => 1 + size(l) + size(r)
+      case EmptyLeaf => 1
     }
   
   //3.26
@@ -30,6 +33,7 @@ object Tree {
       t match {
         case Leaf(x) => x max z 
         case Branch(l, r) => go(l, z) max go(r, z)
+        case EmptyLeaf => z
       }
     go(t, -1)
   }
