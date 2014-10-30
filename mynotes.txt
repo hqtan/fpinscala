@@ -6,3 +6,27 @@ Light bulb moments:
 ch3:
 - arg2 of foldRight() and foldLeft() can ALSO be a List type! It's not limited to just a Int or Char, etc..
 
+
+2014-10-30:
+  case class Box[A](a: A) {
+    def map[B](f: A => B): Box[B] = Box(f(a))
+    def flatMap[B](f: A => Box[B]): Box[B] = f(a)
+  }
+
+  sealed trait Option0[A] {
+    def map[B](f: A => B): Option0[B] =
+      this match {
+        case Some0(x) => Some0(f(x))
+        case None0 => None0
+      }
+
+    def flatMap[B](f: A => Option0[B]): Option0[B] =
+      this match {
+        case Some0(x) => f(x)
+        case None0 => None0
+      }
+  }
+
+  case class Some0(a: A) extends Option0[A]
+  case object None0 extends Option0[Nothing]
+
