@@ -32,30 +32,32 @@ object Tree {
     }
 
   //3.27
-  /*
-  def depth[A](t: Tree[A], n: A): Int = {
-    def go[A](t: Tree[A], z: Int): Int =
-      t match {
-        case Leaf(x) =>  if (x == n) z else 0
-        case Branch(l, r) => go(l, z+1) + go(r, z+1)
-      }
-    go(t, 0)
-  }
-  */
- 
+  //@annotation.tailrec
   def depth[A](t: Tree[A]): Int = 
     t match {
         case Leaf(_) => 0
         case Branch(l, r) => (1 + depth(l)) max (1 + depth(r))
     }
 
-  //@annotation.tailrec
-  def depth2[A](t: Tree[A]): Int = {
-    def go[A](t: Tree[A], z: Int): Int =
-      t match {
-          case Leaf(_) => z
-          case Branch(l, r) => go(l, z+1) max go(r, z+1)
-      }
-      go(t, 0)
-  }
+  //3.28
+  def map[A,B](t: Tree[A])(f: A => B): Tree[B] =
+    t match {
+      case Leaf(n) => Leaf(f(n))
+      case Branch(l, r) => Branch(map(l)(f),map(r)(f))
+    }
+    
+  //3.29
+  def fold[A,B](t: Tree[A], z: B)(f: (A,B) => B): B =
+    t match {
+      case Leaf(n) => z
+      case Branch(l,r) => fold(l,z)(f)
+    }
+
+  /*
+  def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = 
+    as match {
+      case Nil => z
+      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    }
+  */
 }
