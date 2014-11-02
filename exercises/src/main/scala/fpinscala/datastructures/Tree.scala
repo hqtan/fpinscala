@@ -32,11 +32,11 @@ object Tree {
     }
 
   //3.27
-  //@annotation.tailrec
   def depth[A](t: Tree[A]): Int = 
     t match {
         case Leaf(_) => 0
-        case Branch(l, r) => (1 + depth(l)) max (1 + depth(r))
+        case Branch(l, r) => 1 + (depth(l) max depth(r))
+        //case Branch(l, r) => (1 + depth(l)) max (1 + depth(r))
     }
 
   //3.28
@@ -47,17 +47,22 @@ object Tree {
     }
     
   //3.29
-  def fold[A,B](t: Tree[A], z: B)(f: (A,B) => B): B =
+  //@annotation.tailrec
+  def fold[A,B](t: Tree[A])(l: A => B)(b: (B,B) => B): B =
     t match {
-      case Leaf(n) => z
-      case Branch(l,r) => fold(l,z)(f)
+      case Leaf(n) => l(n)
+      case Branch(bl,br) => b(fold(bl)(l)(b),fold(br)(l)(b))
     }
 
-  /*
-  def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = 
-    as match {
-      case Nil => z
-      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
-    }
-  */
+  def sizef[A](b: Tree[A]): Int = 
+    fold(b)(x => 1)(_ + _ + 1)
+
+  def maximumf(t: Tree[Int]): Int = 
+    fold(t)(x => x)(_ max _)
+
+  def depthf[A](t: Tree[A]): Int = 
+    fold(t)(x => 0)((l,r) => 1 + (l max r))
+
+  def mapf[A,B](t: Tree[A])(f: A => B): Tree[B] = 
+    fold(t)(x => Leaf(f(x)): Tree[B])(Branch(_,_))
 }
