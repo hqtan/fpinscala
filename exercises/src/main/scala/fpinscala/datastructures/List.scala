@@ -150,21 +150,11 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldLeft(l, Nil:List[A])((z:List[A], x:A) => Cons(x,z))
 
   //ex3.13
-  def foldLeft2[A,B](l: List[A], z: B)(f: (B, A) => B): B = ???
-    //foldRight(l, ?)((x,y) => ?)
-    /*
-    l match {
-      case Nil => z
-      case Cons(x,xs) => foldRight(xs, f(z,x))(f)
-    }
-    */
-  /*
-  def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = // Utility functions
-    as match {
-      case Nil => z
-      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
-    }
-  */
+  def foldLeftviaFoldRight[A,B](l: List[A], z: B)(f: (B, A) => B): B = 
+    foldRight(l, z)((x,z) => f(z,x))
+
+  def foldRightviaFoldLeft[A,B](as: List[A], z: B)(f: (A, B) => B): B =
+    foldLeft(reverse(as), z)((z,x) => f(x,z))
 
   //ex3.14
   //foldRight implementation of append()
@@ -315,11 +305,3 @@ object List { // `List` companion object. Contains functions for creating and wo
   }
 }
 
-/*
-  @annotation.tailrec
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = 
-    l match {
-      case Nil => z
-      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
-    }
- */
