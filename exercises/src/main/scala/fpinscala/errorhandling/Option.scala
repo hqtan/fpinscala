@@ -11,18 +11,32 @@ sealed trait Option[+A] {
       case None => None
     }
 
-  def getOrElse[B>:A](default: => B): B = sys.error("todo")
+  def getOrElse[B>:A](default: => B): B = 
+    this match {
+      case Some(x) => x
+      case None => default
+    }
 
   def flatMap[B](f: A => Option[B]): Option[B] = 
+    /*
     this match {
       case Some(x) => f(x)
       case None => None
     }
-    //for (Some(x) <- this if x != None) yield ???
+    */
+    map(f) getOrElse None
 
-  def orElse[B>:A](ob: => Option[B]): Option[B] = sys.error("todo")
+  def orElse[B>:A](ob: => Option[B]): Option[B] =
+    this match {
+      case Some(x) => Some(x)
+      case None => ob
+    }
 
-  def filter(f: A => Boolean): Option[A] = sys.error("todo")
+  def filter(f: A => Boolean): Option[A] = 
+    this match {
+      case Some(x) => if (f(x)) Some(x) else None
+      case None => None
+    }
 }
 case class Some[+A](get: A) extends Option[A]
 case object None extends Option[Nothing]
