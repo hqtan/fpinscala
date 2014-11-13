@@ -50,21 +50,21 @@ object List { // `List` companion object. Contains functions for creating and wo
   def tail[A](l: List[A]): List[A] = 
     l match {
       case Nil => Nil
-      case Cons(x, xs) => xs
+      case Cons(_, xs) => xs
     }
 
   //ex3.3
   def setHead[A](l: List[A], h: A): List[A] = 
     l match {
       case Nil => Nil
-      case Cons(x, xs) => Cons(h, xs)
+      case Cons(_, xs) => Cons(h, xs)
     }
 
   //ex3.4
   def drop[A](l: List[A], n: Int): List[A] = 
     l match {
       case Nil => Nil
-      case Cons(x, xs) => if (n == 0) Cons(x, xs) else drop(xs, n-1)
+      case Cons(x, xs) => if (n <= 0) Cons(x, xs) else drop(xs, n-1)
     }
 
   //ex3.5
