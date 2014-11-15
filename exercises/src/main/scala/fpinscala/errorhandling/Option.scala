@@ -7,8 +7,8 @@ sealed trait Option[+A] {
   //ex4.1
   def map[B](f: A => B): Option[B] = 
     this match {
-      case Some(x) => Some(f(x))
       case None => None
+      case Some(x) => Some(f(x))
     }
 
   def getOrElse[B>:A](default: => B): B = 
@@ -72,12 +72,17 @@ object Option {
   def variance(xs: Seq[Double]): Option[Double] = 
     mean(xs).flatMap(m => mean(xs.map(x => math.pow(x - m, 2))))
 
+  //ex4.3
+  // if supply None as an input, make sure to specify type like so:
+  // map2(Some(3), None:Option[Int])(_ * _)
   def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = 
+    /*
     (a, b) match {
       case (None,_) => None
       case (_,None) => None
-      case (x, Some(y)) => x flatMap (z => Some(f(z,y)))
-    }
+      case (x, y) => x flatMap ((z:A) => y map ((a:B) => f(z,a)))
+    }*/
+    a flatMap ((x:A) => b map ((y:B) => f(x,y)))
 
   def sequence[A](a: List[Option[A]]): Option[List[A]] = sys.error("todo")
 
