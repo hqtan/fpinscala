@@ -84,7 +84,15 @@ object Option {
     }*/
     a flatMap ((x:A) => b map ((y:B) => f(x,y)))
 
-  def sequence[A](a: List[Option[A]]): Option[List[A]] = sys.error("todo")
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = {
+    def go (a: List[Option[A]], acc: List[A]): List[A] =
+      a match {
+        case Some(x) :: xs if x != None => go(xs, x :: acc)
+        case _ => acc
+      }
+      
+      if (a contains None) None else Some(go(a, List()).reverse)
+    }
 
   def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = sys.error("todo")
 }
