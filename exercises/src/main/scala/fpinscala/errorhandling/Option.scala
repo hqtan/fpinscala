@@ -109,4 +109,15 @@ object Option {
       case Nil => Some(Nil)
       case x :: xs => f(x) flatMap (b => traverse(xs)(f) map (b :: _))
     }
+
+  def sequence2[A](a: List[Option[A]]): Option[List[A]] = 
+    traverse(a)(x => x)
+
+  def sequence3[A](a: List[Option[A]]): Option[List[A]] = 
+    a match {
+      case Nil => Some(Nil)
+      case h :: t => for { a <- h 
+                           as <- sequence(t) } yield a :: as
+    }
+
 }
