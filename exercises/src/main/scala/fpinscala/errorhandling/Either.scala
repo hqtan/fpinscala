@@ -10,15 +10,35 @@ sealed trait Either[+E,+A] {
       case Right(x) => Right(f(x))
     }
 
- def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B] =
+  def flatMap[EE >: E, B](f: A => Either[EE, B]): Either[EE, B] =
    this match {
       case Left(e) => Left(e)
       case Right(x) => f(x)
    }
 
- def orElse[EE >: E, B >: A](b: => Either[EE, B]): Either[EE, B] = sys.error("todo")
+  def orElse[EE >: E, B >: A](b: => Either[EE, B]): Either[EE, B] = 
+    this match {
+      case Right(x) => Right(x)
+      case Left(_) => b
+    }
 
- def map2[EE >: E, B, C](b: Either[EE, B])(f: (A, B) => C): Either[EE, C] = sys.error("todo")
+  def map2[EE >: E, B, C](b: Either[EE, B])(f: (A, B) => C): Either[EE, C] = 
+    //flatMap (a => b map (f(a,_)))
+    for {
+      a <- this
+      bb <- b
+    } yield f(a, bb)
+    
+  /* Question RE flatMap :
+   * Why does calling flatMap only work with dot notation?
+   *
+   * scala> x.map2(y)(_ + _)
+   * res23: fpinscala.errorhandling.Either[String,Int] = Right(3)
+   *
+   * scala> x map2 y (_ + _)
+   * <console>:16: error: fpinscala.errorhandling.Either[String,Int] does not take parameters
+   *               x map2 y (_ + _)
+   */
 }
 case class Left[+E](get: E) extends Either[E,Nothing]
 case class Right[+A](get: A) extends Either[Nothing,A]
