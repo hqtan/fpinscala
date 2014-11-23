@@ -58,4 +58,19 @@ object Either {
     try Right(a)
     catch { case e: Exception => Left(e) }
 
+  def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] = 
+    es match {
+      case Nil => Right(Nil)
+      case x :: xs => x flatMap (xx => sequence(xs) map (xx :: _))
+    }
+
+  def traverse[E, A, B](as: List[A])(
+    f: A => Either[E, B]): Either[E, List[B]] = 
+    as match {
+      case Nil => Right(Nil)
+      case x :: xs => for {
+                            a <- f(x)
+                            as <- traverse(xs)(f) 
+                          } yield (a :: as) 
+    }
 }
