@@ -17,6 +17,15 @@ trait Stream[+A] {
     case Empty => None
     case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
   }
+
+  def headOption: Option[A] = this match {
+    case Empty => None
+    case Cons(h, t) => Some(h())
+  }
+
+  //ex5.1
+  def toList: List[A] = sys.error("todo")
+
   def take(n: Int): Stream[A] = sys.error("todo")
 
   def drop(n: Int): Stream[A] = sys.error("todo")
