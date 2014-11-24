@@ -24,7 +24,10 @@ trait Stream[+A] {
   }
 
   //ex5.1
-  def toList: List[A] = sys.error("todo")
+  def toList: List[A] = this match {
+    case Empty => Nil
+    case Cons(h, t) => h() :: t().toList
+  }
 
   def take(n: Int): Stream[A] = sys.error("todo")
 
