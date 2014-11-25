@@ -24,9 +24,21 @@ trait Stream[+A] {
   }
 
   //ex5.1
+  /* non-tail recursive implementation
   def toList: List[A] = this match {
     case Empty => Nil
     case Cons(h, t) => h() :: t().toList
+  }*/
+
+  // tail recursive (threadsafe) implementation
+  def toList: List[A] = {
+    @annotation.tailrec
+    def go(xs: Stream[A], acc: List[A]): List[A] =
+      xs match {
+        case Empty => acc
+        case Cons(h, t) => go(t(), h() :: acc) 
+      }
+    go(this, List()).reverse
   }
 
   def take(n: Int): Stream[A] = sys.error("todo")
