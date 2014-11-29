@@ -40,10 +40,25 @@ trait Stream[+A] {
       }
     go(this, List()).reverse
   }
+  
+  //ex5.2
+  def take(n: Int): Stream[A] = (this, n) match {
+    case (Empty, _) => Stream()
+    case (_, n) if n <= 0 => Stream()
+    case (Cons(h, t), _) => cons(h(),t().take(n-1))
+  }
 
-  def take(n: Int): Stream[A] = sys.error("todo")
-
-  def drop(n: Int): Stream[A] = sys.error("todo")
+  def drop(n: Int): Stream[A] = {
+    @annotation.tailrec
+    def go(n: Int, acc: Stream[A]): Stream[A] = (acc, n) match {
+      case (Empty, _) => acc
+      case (_, n) if (n <= 0) => acc
+      case (Cons(_, t), _) => go(n-1, t())
+    }
+    go(n, this)
+  }
+  
+  //def drop(n: Int): Stream[A] = sys.error("todo")
 
   def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
 
