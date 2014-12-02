@@ -43,22 +43,32 @@ trait Stream[+A] {
   
   //ex5.2
   def take(n: Int): Stream[A] = (this, n) match {
-    case (Empty, _) => Stream()
-    case (_, n) if n <= 0 => Stream()
-    case (Cons(h, t), _) => cons(h(),t().take(n-1))
+    case (Cons(h, t), n) if n > 0 => cons(h(),t().take(n-1))
+    case (_,_) => Stream()
   }
+  
+  /*
+  def take(n: Int): Stream[A] = {
+    val buf = new collection.mutable.ListBuffer[A] 
+    @annotation.tailrec
+    def go(n: Int, ss: Stream[A]): Stream[A] = 
+      (ss, n) match {
+        case (Cons(h, t), n) if n > 0 => 
+          buf += h() 
+          go(n-1, t())
+        case (_,_) => buf.toStream
+      }
+    go(n, this)
+  }*/
 
   def drop(n: Int): Stream[A] = {
     @annotation.tailrec
     def go(n: Int, acc: Stream[A]): Stream[A] = (acc, n) match {
-      case (Empty, _) => acc
-      case (_, n) if (n <= 0) => acc
-      case (Cons(_, t), _) => go(n-1, t())
+      case (Cons(_, t), n) if n > 0 => go(n-1, t())
+      case (_, _) => acc
     }
     go(n, this)
   }
-  
-  //def drop(n: Int): Stream[A] = sys.error("todo")
 
   def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
 
