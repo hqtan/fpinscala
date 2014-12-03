@@ -42,12 +42,12 @@ trait Stream[+A] {
   }
   
   //ex5.2
+  /*
   def take(n: Int): Stream[A] = (this, n) match {
     case (Cons(h, t), n) if n > 0 => cons(h(),t().take(n-1))
     case (_,_) => Stream()
-  }
+  }*/
   
-  /*
   def take(n: Int): Stream[A] = {
     val buf = new collection.mutable.ListBuffer[A] 
     @annotation.tailrec
@@ -56,10 +56,10 @@ trait Stream[+A] {
         case (Cons(h, t), n) if n > 0 => 
           buf += h() 
           go(n-1, t())
-        case (_,_) => buf.toStream
+        case (_,_) => buf.foldRight(Stream.empty:Stream[A])((x,z) => cons(x,z))
       }
     go(n, this)
-  }*/
+  }
 
   def drop(n: Int): Stream[A] = {
     @annotation.tailrec
