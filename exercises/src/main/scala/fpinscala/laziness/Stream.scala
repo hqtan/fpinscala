@@ -42,7 +42,7 @@ trait Stream[+A] {
   }
   
   //ex5.2
-  /*
+  /* non-tail recursive take()
   def take(n: Int): Stream[A] = (this, n) match {
     case (Cons(h, t), n) if n > 0 => cons(h(),t().take(n-1))
     case (_,_) => Stream()
@@ -70,7 +70,11 @@ trait Stream[+A] {
     go(n, this)
   }
 
-  def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
+  //@annotation.tailrec
+  def takeWhile(p: A => Boolean): Stream[A] = this match {
+    case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
+    case _ => Stream.empty
+  }
 
   def forAll(p: A => Boolean): Boolean = sys.error("todo")
 
