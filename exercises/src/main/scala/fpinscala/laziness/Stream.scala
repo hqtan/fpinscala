@@ -70,10 +70,23 @@ trait Stream[+A] {
     go(n, this)
   }
 
-  //@annotation.tailrec
+  //ex5.3
+  /*
   def takeWhile(p: A => Boolean): Stream[A] = this match {
     case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
     case _ => Stream.empty
+  }*/
+
+  def takeWhile(p: A => Boolean): Stream[A] = {
+    val buf = new collection.mutable.ListBuffer[A] 
+    @annotation.tailrec
+    def go(ss: Stream[A]): Stream[A] = ss match {
+      case Cons(h, t) if p(h()) => 
+        buf += h()
+        go(t())
+      case _ => buf.foldRight(Stream.empty:Stream[A])((x,z) => cons(x,z))
+    }
+    go(this)
   }
 
   def forAll(p: A => Boolean): Boolean = sys.error("todo")
