@@ -89,7 +89,23 @@ trait Stream[+A] {
     go(this)
   }
 
-  def forAll(p: A => Boolean): Boolean = sys.error("todo")
+  //ex5.4
+  /*
+  def forAll(p: A => Boolean): Boolean = {
+    @annotation.tailrec
+    def go(ss: Stream[A], bool: Boolean): Boolean = ss match {
+      case Cons(h, t) if !p(h()) => false
+      case Cons(h, t) => go(t(), true)
+      case _ => bool 
+    }
+    go(this, false)
+  }*/
+  
+  //foldRight implementation of forAll errors for Stream.empty
+  //and returns true for Stream()
+  def forAll(p: A => Boolean): Boolean = 
+    foldRight(true)((a,b) => p(a) && b)
+    //this.foldRight(false)((x,z) => p(x) && this.drop(1).forAll(p))
 
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
