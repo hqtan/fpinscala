@@ -112,6 +112,13 @@ trait Stream[+A] {
     foldRight(Stream.empty:Stream[A])((x,z) => 
         if (p(x)) cons(x,z) else Stream.empty) 
 
+  //ex5.6
+  def headOptionWithFoldR: Option[A] = 
+    foldRight(None:Option[A])((x,z) =>
+        if (Some(x).isEmpty) None:Option[A] else Some(x))
+  //authors' implementation below much more concise:
+  //foldRight(None: Option[A])((h,_) => Some(h))
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
 case object Empty extends Stream[Nothing]
