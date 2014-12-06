@@ -107,6 +107,11 @@ trait Stream[+A] {
     foldRight(true)((a,b) => p(a) && b)
     //this.foldRight(false)((x,z) => p(x) && this.drop(1).forAll(p))
 
+  //ex5.5
+  def takeWhileWithFoldR(p: A => Boolean): Stream[A] = 
+    foldRight(Stream.empty:Stream[A])((x,z) => 
+        if (p(x)) cons(x,z) else Stream.empty) 
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
 case object Empty extends Stream[Nothing]
