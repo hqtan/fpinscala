@@ -119,6 +119,17 @@ trait Stream[+A] {
   //authors' implementation below much more concise:
   //foldRight(None: Option[A])((h,_) => Some(h))
 
+  //ex5.7
+  def map[B](f: (=>A) => B): Stream[B] = 
+    foldRight(empty:Stream[B])((x,z) => cons(f(x),z))
+
+  def filter(p: (=>A) => Boolean): Stream[A] =
+    foldRight(empty:Stream[A])((x,z) =>
+        if (p(x)) cons(x,z) else z)
+
+  def append[B >: A](s:Stream[B]): Stream[B] = 
+    foldRight(s)((x,z) => cons(x,z))
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
 case object Empty extends Stream[Nothing]
