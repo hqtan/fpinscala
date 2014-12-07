@@ -71,12 +71,18 @@ trait Stream[+A] {
   }
 
   //ex5.3
-  /*
   def takeWhile(p: A => Boolean): Stream[A] = this match {
     case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
     case _ => Stream.empty
-  }*/
+  }
 
+  /*
+   * Question to ask:
+   * This implementation of takeWhile is stacksafe, but doesn't
+   * evaluate lazily anymore! e.g:
+   * ones.takeWhile(_ == 1) will not return a value
+   * How to fix it?
+   *
   def takeWhile(p: A => Boolean): Stream[A] = {
     val buf = new collection.mutable.ListBuffer[A] 
     @annotation.tailrec
@@ -87,7 +93,7 @@ trait Stream[+A] {
       case _ => buf.foldRight(Stream.empty:Stream[A])((x,z) => cons(x,z))
     }
     go(this)
-  }
+  }*/
 
   //ex5.4
   /*
@@ -101,8 +107,11 @@ trait Stream[+A] {
     go(this, false)
   }*/
   
-  //foldRight implementation of forAll errors for Stream.empty
-  //and returns true for Stream()
+  /* Question to ask:
+   * foldRight implementation of forAll errors for Stream.empty
+   * and returns true for Stream()
+   * Try to fix this!
+  */
   def forAll(p: A => Boolean): Boolean = 
     foldRight(true)((a,b) => p(a) && b)
     //this.foldRight(false)((x,z) => p(x) && this.drop(1).forAll(p))
@@ -130,6 +139,14 @@ trait Stream[+A] {
   def append[B >: A](s:Stream[B]): Stream[B] = 
     foldRight(s)((x,z) => cons(x,z))
 
+  /*
+   * Question to ask:
+   * flatMap can't take Stream[List[A]] as input, unlike the standard
+   * flatMap implementation. Why is that?
+  */
+  def flatMap[B](f: (=>A) => Stream[B]): Stream[B] = 
+    foldRight(empty:Stream[B])((x,z) => f(x).append(z))
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
 case object Empty extends Stream[Nothing]
@@ -149,6 +166,10 @@ object Stream {
     else cons(as.head, apply(as.tail: _*))
 
   val ones: Stream[Int] = Stream.cons(1, ones)
+
+  //ex5.8
+  def constant[A](a: A): Stream[A] = Stream.cons(a, constant(a))
+
   def from(n: Int): Stream[Int] = sys.error("todo")
 
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
