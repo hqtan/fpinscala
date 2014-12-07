@@ -173,5 +173,8 @@ object Stream {
   //ex5.9
   def from(n: Int): Stream[Int] = Stream.cons(n, from(n + 1))
 
+  //ex5.10
+  def fibs(m:Int, n:Int): Stream[Int] = Stream.cons(n, fibs(n, m+n))
+
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
 }
