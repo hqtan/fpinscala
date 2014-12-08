@@ -176,5 +176,10 @@ object Stream {
   //ex5.10
   def fibs(m:Int, n:Int): Stream[Int] = Stream.cons(n, fibs(n, m+n))
 
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
+  //ex5.11
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = 
+    f(z) match {
+      case Some((a, s)) => cons(a, unfold(s)(f))
+      case _ => empty
+    }
 }
