@@ -184,10 +184,13 @@ object Stream {
     }
 
   //ex5.12
-  //ones : unfold(1)(x => Some(x, x))
-  //from : unfold(1)(x => Some(x, x+1)).take(8).toList
-  //
   def fibsWithUnfold(m:Int, n:Int): Stream[Int] = {
     unfold((m, n)){ case (a,b) => Some(a, (b, a+b)) }
   }
+
+  def fromUnfold(n: Int): Stream[Int] = unfold(n)(_ => Some(n, n+1))
+
+  def constantUnfold[A](n:A): Stream[A] = unfold(n)(_ => Some(n, n))
+  
+  val onesUnfold: Stream[Int] = unfold(1)(x => Some(x, x))
 }
