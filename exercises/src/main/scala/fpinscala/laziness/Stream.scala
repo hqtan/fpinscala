@@ -182,4 +182,12 @@ object Stream {
       case Some((a, s)) => cons(a, unfold(s)(f))
       case _ => empty
     }
+
+  //ex5.12
+  //ones : unfold(1)(x => Some(x, x))
+  //from : unfold(1)(x => Some(x, x+1)).take(8).toList
+  //
+  def fibsWithUnfold(m:Int, n:Int): Stream[Int] = {
+    unfold((m, n)){ case (a,b) => Some(a, (b, a+b)) }
+  }
 }
