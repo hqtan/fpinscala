@@ -147,6 +147,13 @@ trait Stream[+A] {
   def flatMap[B](f: (=>A) => Stream[B]): Stream[B] = 
     foldRight(empty:Stream[B])((x,z) => f(x).append(z))
 
+  //ex5.13
+  def mapWithUnfold[B](f: (=>A) => B): Stream[B] = 
+    Stream.unfold(this){ 
+        case Cons(h,t) => Some((f(h()), t()))
+        case _ => None
+      }
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
 case object Empty extends Stream[Nothing]
