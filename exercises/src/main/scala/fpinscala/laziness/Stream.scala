@@ -154,6 +154,38 @@ trait Stream[+A] {
         case _ => None
       }
 
+  def takeWithUnfold(n: Int): Stream[A] = 
+    unfold((n,this)){
+      case(x,Cons(h,t)) if x > 0 => Some((h(), (x-1,t())))
+      case _ => None
+    }
+
+  def takeWhileWithUnfold(p: A => Boolean): Stream[A] = 
+    unfold(this){
+      case(Cons(h,t)) if p(h()) => Some((h(), t()))
+      case _ => None
+    }
+
+  def zipWith[B,C](b: Stream[B])(f: (A,B) => C): Stream[C] = 
+    unfold((this, b)) {
+      case (Cons(h1,t1), Cons(h2,t2)) => Some((f(h1(),h2()), (t1(), t2())))
+      case (_, _) => None
+    }
+
+  /*
+   * Question to ask:
+   * in author's solution for zipAll, what's with '->' operator in 
+   * zipWithAll? Is that another way of writing tuples?
+   * i.e. (a,b) === (a -> b) ?
+   */
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A],Option[B])] = 
+    unfold((this, s2)){
+      case (Cons(h1,t1), Cons(h2,t2)) => Some((Some(h1()), Some(h2())) -> (t1(), t2()))
+      case (Cons(h1,t1), empty) => Some((Some(h1()),None) -> (t1(), empty))
+      case (empty, Cons(h2,t2)) => Some((None,Some(h2())) -> (empty, t2()))
+      case (_, _) => None
+    }
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
 case object Empty extends Stream[Nothing]
