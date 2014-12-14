@@ -186,7 +186,18 @@ trait Stream[+A] {
       case (_, _) => None
     }
 
-  def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
+  //ex5.14
+  /*
+  def startsWith[B](s: Stream[B]): Boolean =
+    (this, s) match {
+      case (Cons(h1,t1), Cons(h2,t2)) if h1() == h2() => 
+        if (t2() == Empty) true else t1().startsWith(t2())
+      case (_, _) => false
+    }*/
+
+  def startsWith[B](s: Stream[B]): Boolean =
+    if (this.zipWith(s)(_ == _).exists(_ == false)) false else true
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
