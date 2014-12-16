@@ -196,7 +196,10 @@ trait Stream[+A] {
     }*/
 
   def startsWith[B](s: Stream[B]): Boolean =
-    if (this.zipWith(s)(_ == _).exists(_ == false)) false else true
+    (this.zipWith(s)(_ == _)) match {
+      case Empty => false
+      case x => if ( x.exists(_ == false) ) false else true
+    }
 
   def startsWith2[B](s: Stream[B]): Boolean =
     this.zipAll(s).takeWhile(!_._2.isEmpty).forAll{
