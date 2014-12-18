@@ -30,13 +30,19 @@ object RNG {
       (f(a), rng2)
     }
 
+  //ex6.1
   def nonNegativeInt(rng: RNG): (Int, RNG) = 
     rng.nextInt match {
       case (i, rngx) if (i == Int.MinValue) => nonNegativeInt(rngx)
       case (i, rngx) => (Math.abs(i), rngx)
     }
 
-  def double(rng: RNG): (Double, RNG) = ???
+  //ex6.2
+  def double(rng: RNG): (Double, RNG) = {
+    val (i, rngx) = nonNegativeInt(rng)
+    (if (i < Int.MaxValue) i.toDouble/Int.MaxValue else 0.0, rngx)
+  }
+
 
   def intDouble(rng: RNG): ((Int,Double), RNG) = ???
 
