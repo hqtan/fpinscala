@@ -43,12 +43,31 @@ object RNG {
     (if (i < Int.MaxValue) i.toDouble/Int.MaxValue else 0.0, rngx)
   }
 
+  //ex6.3
+  def intDouble(rng: RNG): ((Int,Double), RNG) = {
+    val (i, rngi) = nonNegativeInt(rng)
+    val (d, rngd) = double(rngi)
+    ((i,d), rngd)
+  }
 
-  def intDouble(rng: RNG): ((Int,Double), RNG) = ???
+  def doubleInt(rng: RNG): ((Double,Int), RNG) = {
+    val ((i, d), rngx) = intDouble(rng)
+    ((d, i) , rngx)
+  }
 
-  def doubleInt(rng: RNG): ((Double,Int), RNG) = ???
-
-  def double3(rng: RNG): ((Double,Double,Double), RNG) = ???
+  def double3(rng: RNG): ((Double,Double,Double), RNG) = {
+    val (d1, rng1) = double(rng)
+    val (d2, rng2) = double(rng1)
+    val (d3, rng3) = double(rng2)
+    ((d1, d2, d3), rng3)
+    /*
+    for (
+         (d1, rng1) <- double(rng);
+         (d2, rng2) <- double(rng1);
+         (d3, rng3) <- double(rng2)
+       ) yield ((d1, d2, d3), rng3)
+    */
+  }
 
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = ???
 
