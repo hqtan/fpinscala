@@ -30,3 +30,43 @@ ch3:
   case class Some0(a: A) extends Option0[A]
   case object None0 extends Option0[Nothing]
 
+2014-12-21
+Ken's comments:
+
+James Iry is a really good writer, but monad metaphors like "elephants" or "burritos" or "spacesuits" are uniformly terrible.
+I don't think this one is a great monad tutorial
+"Containers" is too specific an intuition; you can more accurately call it a "computation"
+For instance, List[_] and Option[_] are containers (edited)
+but Reader[S,_] and State[S,_] are wrappers around S => A and S => (A, S) functions respectively; they don't hold things, they process things
+
+trait Monad[M[_]] {
+  def flatMap[A,B](ma: M[A], f: A => M[B]): M[B]
+  def unit[A](a: A): M[A]
+}
+
+Implement that for some type M[_], and M is a monad.  Done!
+(subject to non-pathological implementations:)
+flatMap(ma, unit) == ma
+flatMap(flatMap(ma, f), g) == flatMap(ma, a => flatMap(f(a), g))
+should both be true
+Everything else flows from those type signatures and laws
+In Scala we often implement map and flatMap instead, which basically gives us the same behaviour (why?)
+As an exercise, try implementing the Monad trait above (or just map and flatMap if you like) for the following:
+
+1) case class Box[A](a: A)
+2) sealed trait Option[+A]
+    case class Some[A](a: A) extends Option[A]
+    case object None extends Option[Nothing]
+3) sealed trait List[+A]
+    case class Cons[A](head: A, tail: List[A]) extends List[A]
+    case object Nil extends List[Nothing]
+4) case class Reader[S,A](run: S => A)
+5) case class State[S,A](run: S => (A,S))
+
+(edited)
+That'll give you way better intuition than "elephants"!
+For the last two, it's a bit hard in Scala to partially apply a [_,_] type to say, Reader[S,_].  It might be easier to just define map and flatMap, for those ones
+Ken Scambler 23:55 I recommend Tony Morris' slides and talk on Monads:
+https://dl.dropboxusercontent.com/u/7810909/docs/what-does-monad-mean/what-does-monad-mean.html
+http://vimeo.com/8729673
+
