@@ -70,8 +70,6 @@ object RNG {
   }
 
   //ex6.4
-  //def unfold[A](s: RNG)(f: RNG => Option[(A, RNG)]): (List[Int], RNG) = ???
-  //unfold(x.nextInt){case (i, rng) => Some((i, nonNegativeInt(rng)))}.take(4).toList
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
     val buf = new collection.mutable.ListBuffer[Int] 
     @annotation.tailrec
@@ -85,6 +83,17 @@ object RNG {
       }
     go(count)(rng)
   }
+
+  /*
+  def map[A,B](s: Rand[A])(f: A => B): Rand[B] =
+    rng => {
+      val (a, rng2) = s(rng)
+      (f(a), rng2)
+    }
+  */
+  //ex6.5
+  def doubleWithMap: Rand[Double] = 
+    map(nonNegativeInt)(_/(Int.MaxValue.toDouble + 1))
 
   def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = ???
 
