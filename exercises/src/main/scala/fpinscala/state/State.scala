@@ -74,6 +74,7 @@ object RNG {
   //unfold(x.nextInt){case (i, rng) => Some((i, nonNegativeInt(rng)))}.take(4).toList
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
     val buf = new collection.mutable.ListBuffer[Int] 
+    @annotation.tailrec
     def go(count: Int)(rng: RNG): (List[Int], RNG) =
       (count, rng) match {
         case (c, r) if (c > 0) => 
