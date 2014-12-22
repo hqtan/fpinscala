@@ -60,14 +60,15 @@ object RNG {
     val (d2, rng2) = double(rng1)
     val (d3, rng3) = double(rng2)
     ((d1, d2, d3), rng3)
-    /*
-    for (
-         (d1, rng1) <- double(rng);
-         (d2, rng2) <- double(rng1);
-         (d3, rng3) <- double(rng2)
-       ) yield ((d1, d2, d3), rng3)
-    */
   }
+  /*
+  for (
+    (d1, rng1) <- double(rng);
+    (d2, rng2) <- double(rng1);
+    (d3, rng3) <- double(rng2)
+  ) yield ((d1, d2, d3), rng3)
+  */
+
 
   //ex6.4
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
@@ -95,7 +96,13 @@ object RNG {
   def doubleWithMap: Rand[Double] = 
     map(nonNegativeInt)(_/(Int.MaxValue.toDouble + 1))
 
-  def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = ???
+  //ex6.6
+  def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = 
+    rng => {
+      val (v1, r1) = ra(rng)
+      val (v2, r2) = rb(r1)
+      (f(v1, v2), r2)
+    }
 
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = ???
 
