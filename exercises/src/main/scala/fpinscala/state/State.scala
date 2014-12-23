@@ -105,6 +105,11 @@ object RNG {
     }
 
   //ex6.7
+  /*
+   * Question to ask:
+   * how to modify sequence to use a different seed value for each list
+   * element?
+   */
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = 
     rng => {
       fs.foldRight(unit(Nil:List[A])(rng))((x, z) => {
@@ -112,7 +117,21 @@ object RNG {
         unit(v :: z._1)(r)
       })
     }
-  
+
+  def sequence2[A](fs: List[Rand[A]]): Rand[List[A]] = 
+    rng => {
+      fs.foldRight(unit(Nil:List[A]))((x,z) => map2(x, z)(_ :: _))(rng)
+    }
+
+  /*
+   * Question to ask:
+   * ints implemented with sequence doesn't produce same result as ints(),
+   * intsWithSequence produces same result for all list elements, since the
+   * same seed value is used.
+   */
+  def intsWithSequence(count: Int)(rng: RNG): (List[Int], RNG) = 
+    sequence(List.fill(count)(nonNegativeInt(_)))(rng)
+
   def flatMap[A,B](f: Rand[A])(g: A => Rand[B]): Rand[B] = ???
 }
 
