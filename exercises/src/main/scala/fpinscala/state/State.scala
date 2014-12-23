@@ -129,8 +129,8 @@ object RNG {
    * intsWithSequence produces same result for all list elements, since the
    * same seed value is used.
    */
-  def intsWithSequence(count: Int)(rng: RNG): (List[Int], RNG) = 
-    sequence(List.fill(count)(nonNegativeInt(_)))(rng)
+  def intsWithSequence(count: Int): Rand[List[Int]] =
+    sequence(List.fill(count)(nonNegativeInt(_)))
 
   def flatMap[A,B](f: Rand[A])(g: A => Rand[B]): Rand[B] = ???
 }
