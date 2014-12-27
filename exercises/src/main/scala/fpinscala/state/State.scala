@@ -144,28 +144,9 @@ object RNG {
   def mapWithFlatMap[A,B](s: Rand[A])(f: A => B): Rand[B] = 
     flatMap(s)(x => unit(f(x)))
 
-  /*
   def map2WithFlatMap[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = 
-    rng => {
-      flatMap(ra)(a => flatMap(rb)(b => ))
-    }
-  */
-  /*
-  def map2WithFlatMap[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
-    for {
-      a <- ra(rng)
-      b <- rb(a._2)
-    } yield (f(a._1, b._1), b._2)
-  }*/
+    flatMap(ra)(a => map(rb)(b => f(a, b)))
 
-  /*
-  def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = 
-    rng => {
-      val (v1, r1) = ra(rng)
-      val (v2, r2) = rb(r1)
-      (f(v1, v2), r2)
-    }
-  */
   /*
   def map[A,B](s: Rand[A])(f: A => B): Rand[B] =
     rng => {
