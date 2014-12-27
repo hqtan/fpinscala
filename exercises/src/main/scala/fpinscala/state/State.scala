@@ -85,13 +85,6 @@ object RNG {
     go(count)(rng)
   }
 
-  /*
-  def map[A,B](s: Rand[A])(f: A => B): Rand[B] =
-    rng => {
-      val (a, rng2) = s(rng)
-      (f(a), rng2)
-    }
-  */
   //ex6.5
   def doubleWithMap: Rand[Double] = 
     map(nonNegativeInt)(_/(Int.MaxValue.toDouble + 1))
@@ -147,11 +140,49 @@ object RNG {
       else nonNegativeLessThan(n)(_)
     })
 
+  //ex6.9
+  def mapWithFlatMap[A,B](s: Rand[A])(f: A => B): Rand[B] = 
+    flatMap(s)(x => unit(f(x)))
+
+  /*
+  def map2WithFlatMap[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = 
+    rng => {
+      flatMap(ra)(a => flatMap(rb)(b => ))
+    }
+  */
+  /*
+  def map2WithFlatMap[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
+    for {
+      a <- ra(rng)
+      b <- rb(a._2)
+    } yield (f(a._1, b._1), b._2)
+  }*/
+
+  /*
+  def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = 
+    rng => {
+      val (v1, r1) = ra(rng)
+      val (v2, r2) = rb(r1)
+      (f(v1, v2), r2)
+    }
+  */
+  /*
+  def map[A,B](s: Rand[A])(f: A => B): Rand[B] =
+    rng => {
+      val (a, rng2) = s(rng)
+      (f(a), rng2)
+    }
+  */
 }
 
 case class State[S,+A](run: S => (A, S)) {
-  def map[B](f: A => B): State[S, B] =
-    sys.error("todo")
+  def map[B](f: A => B): State[S, B] = ???
+    /*
+    rng => {
+      val (a, rng2) = this(rng)
+      (f(a), rng2)
+    }*/
+
   def map2[B,C](sb: State[S, B])(f: (A, B) => C): State[S, C] =
     sys.error("todo")
   def flatMap[B](f: A => State[S, B]): State[S, B] =
