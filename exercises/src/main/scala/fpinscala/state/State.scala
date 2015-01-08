@@ -98,16 +98,12 @@ object RNG {
     }
 
   //ex6.7
-  /*
-   * Question to ask:
-   * how to modify sequence to use a different seed value for each list
-   * element?
-   */
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = 
     rng => {
       fs.foldRight(unit(Nil:List[A])(rng))((x, z) => {
-        val (v, r) = x(rng)
-        unit(v :: z._1)(r)
+        val (v, r) = x(z._2)
+        unit(z._1 :+ v)(r)
+        //unit(v :: z._1)(r)
       })
     }
 
