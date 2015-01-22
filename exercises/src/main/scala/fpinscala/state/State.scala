@@ -31,12 +31,19 @@ object RNG {
     }
 
   //ex6.1
-  def nonNegativeInt(rng: RNG): (Int, RNG) = 
+  //my solution
+  def nonNegativeInt2(rng: RNG): (Int, RNG) = 
     rng.nextInt match {
       case (i, rngx) if (i == Int.MinValue) => nonNegativeInt(rngx)
       case (i, rngx) => (Math.abs(i), rngx)
     }
 
+  //authors' solution
+  def nonNegativeInt(rng: RNG): (Int, RNG) = {
+    val (i, r) = rng.nextInt
+    (if (i < 0) -(i + 1) else i, r)
+  }
+  
   //ex6.2
   def double(rng: RNG): (Double, RNG) = {
     val (i, rngx) = nonNegativeInt(rng)
